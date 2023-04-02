@@ -6,7 +6,7 @@ from io import BytesIO
 
 
 st.set_page_config(page_title="EXtraction")
-
+status=False
 
 page_bg_img = '''
 <style>
@@ -32,7 +32,11 @@ img= cv2.imread("C:/Users/glair/Desktop/S7 project/mo4.png", cv2.IMREAD_COLOR)
 
 download = st.button("download", key="lets see")
 if download:
-    cv2.imwrite("C:/Users/glair/Desktop/mo4.png", img)
+    status=cv2.imwrite("C:/Users/glair/Desktop/mo4.png", img)
+if status:
+    st.write("done")
+else:
+    st.write("OOOPS...!!!Try again")
 
 #with open(uploaded_file.name, "rb") as file:
  #   btn = st.download_button(
