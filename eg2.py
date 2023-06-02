@@ -1,5 +1,6 @@
-#from rbml_extract_new import *
+from rbml_extract_new import *
 from rbml_embed_new import *
+from key3 import *
 import os
 from flask import Flask, send_from_directory, request
 from flask_restful import Resource, Api, reqparse
@@ -37,11 +38,12 @@ def send_welcome_msg():
 @cross_origin()
 def encrypt():
         content = request.json
-    # if the user gaives the option to encrypt
-        #m=encryption(msg,key)
-        #l=[m,key]
-        #s=' '.join(l) #jhbkh keyr
-        img=rbml_em(content['msg'])
+        msg=content['msg']
+        key=content['key']
+        m=encryption(msg,key)
+        l=[m,key]
+        s=' '.join(l) #jhbkh keyr
+        img=rbml_em(s)
         #print(img)
         # with open('encode.bin', "wb") as file:
         #     file.write(img)
@@ -50,15 +52,19 @@ def encrypt():
         new_data = { "data" : "http://{}:5000/cdn/{}.png".format(ipv4,img) }
         return new_data
 
-        #pass to front end
-        # if user gives option to decrypt
-        # get the image in image
-            #s=rbml_extract(image)
-            #l= s.split(" ")
-            #m=l[0]
-            # key=l[1]
-            # hidden_msg=decrypt(m,key)
-            #pass to frontend
+
+@app.route('/decrypt', methods=['POST'])
+@cross_origin()
+def decrypt():
+    img = request.files['file'].read() ## byte file
+    h_msg=rbml_ex(img)
+    l= h_msg.split(" ")
+    m=l[0]
+    key=l[1]
+    hidden_msg=decryption(m,key)
+    #pass to frontend
+    new_data = { "data" : hidden_msg }
+    return new_data
 
 if __name__=='__main__':
     ipv4_finder()
